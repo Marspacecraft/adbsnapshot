@@ -235,6 +235,7 @@ def mouse2keyboardrelease(event):
 def mouse2keyboard(event):
     global keyboardrunning
     global thread
+    window.bind('<Button-2>', donothing)
     try:
         thread = threading.Thread(target=listenkeyboard)
         keyboardrunning = True
@@ -242,6 +243,8 @@ def mouse2keyboard(event):
         window.bind('<Button-2>', mouse2keyboardrelease)
     except:
         print("Start keyboard thread error!")
+        keyboardrunning = False
+        window.bind('<Button-2>', mouse2keyboard)
 # 初始窗口
 def winsizeinit():
     global window
