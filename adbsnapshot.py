@@ -1,7 +1,100 @@
 import sys
 import os
+import keyboard
+import threading
+import pyautogui
 from PIL import Image, ImageTk
 import tkinter as tk
+
+AdbKeyValue = {
+'2':'8',#1
+'3':'9',#2
+'4':'10',#3
+'5':'11',#4
+'6':'12',#5
+'7':'13',#6
+'8':'14',#7
+'9':'15',#8
+'10':'16',#9
+'11':'7',#0
+
+'16':'45',#q
+'17':'51',#w
+'18':'33',#e
+'19':'46',#r
+'20':'48',#t
+'21':'53',#y
+'22':'49',#u
+'23':'37',#i
+'24':'43',#o
+'25':'44',#p
+'30':'29',#a
+'31':'47',#s
+'32':'32',#d
+'33':'34',#f
+'34':'35',#g
+'35':'36',#h
+'36':'38',#j
+'37':'39',#k
+'38':'40',#l
+'44':'54',#z
+'45':'52',#x
+'46':'31',#c
+'47':'50',#v
+'48':'30',#b
+'49':'42',#n
+'50':'41',#m
+
+'59':'131',#f1
+'60':'132',#f2
+'61':'133',#f3
+'62':'134',#f4
+'63':'135',#f5
+'64':'136',#f6
+'65':'137',#f7
+'66':'138',#f8
+'67':'139',#f9
+'68':'140',#f10
+'87':'141',#f11
+'88':'142',#f12
+
+'72':'19',#up
+'75':'21',#left
+'80':'20',#donw
+'77':'22',#right
+
+'71':'122',#home
+'79':'123',#end
+'73':'92',#page up
+'81':'93',#page down
+'14':'112',#backspace
+'83':'67',#delete
+'15':'61',#tab
+'28':'66',#enter
+'57':'62',#space
+'1':'111',#esc
+'58':'115',#caps lock
+'55':'318',#print screen
+
+'26':'71',#[
+'27':'72',#]
+'41':'68',#`
+'39':'74',#;
+'40':'75',#'
+'51':'55',#,
+'52':'56',#.
+'53':'76',#/
+'43':'73',#"\\"
+'12':'69',#-
+'13':'70',#=
+
+'42':'59',#left shift
+'29':'113',#left ctrl
+'91':'117',#left win
+'56':'57',#left alt
+'29':'114',#right ctrl
+'54':'60'#right shift
+}
 
 PNGFILE='adbscreen.png'
 TITLESIZE=30
@@ -11,6 +104,25 @@ global resizetime
 global label
 global photo
 global slidepos
+global keyboardrunning
+global thread
+def keyboardexit():
+    global keyboardrunning
+    keyboardrunning = False
+    return
+# 监听键盘线程
+def listenkeyboard():
+    print("---KEYBOARD LISTEN START---")
+    keyboard.add_hotkey('ctrl+k',keyboardexit)
+    while keyboardrunning:
+        event = keyboard.read_event()
+        if event.event_type == 'down':
+            adbkey = AdbKeyValue.get(str(event.scan_code),"NONE")
+            if(adbkey != "NONE"):
+                cmd = 'adb shell input keyevent ' +adbkey
+                print(cmd)
+                os.system(cmd)
+    print("---KEYBOARD LISTEN STOP---")
 #报错退出
 def errmessage(string):
     print(string)
@@ -18,7 +130,6 @@ def errmessage(string):
 # 执行shell命令，并显示在title和shell
 def execadbcmd(string):
     global window
-
     print(string)
     window.title('ADB屏幕快照 -'+string)
     ret = os.system(string)
@@ -105,6 +216,32 @@ def mouseslide(event):
     adblock()
     slidepos = mousepos2string(event)
     window.bind('<ButtonRelease-1>', mousesliderelease)
+# 鼠标中键点击
+def mouse2keyboardrelease(event):
+    global keyboardrunning
+    global thread
+    window.bind('<Button-2>', donothing)
+    keyboardrunning = False
+    # 唤醒keyboard线程
+    pyautogui.hotkey("Ctrl", "k")
+    try:
+        thread.join(5)
+    except:
+        print("Wait thread exit error!")
+
+    window.bind('<Button-2>', mouse2keyboard)
+
+# 鼠标中键点击
+def mouse2keyboard(event):
+    global keyboardrunning
+    global thread
+    try:
+        thread = threading.Thread(target=listenkeyboard)
+        keyboardrunning = True
+        thread.start()
+        window.bind('<Button-2>', mouse2keyboardrelease)
+    except:
+        print("Start keyboard thread error!")
 # 初始窗口
 def winsizeinit():
     global window
@@ -133,8 +270,11 @@ def main():
     global winsize
     global label
     global photo
+    global keyboardrunning
 
     print("---ADB SCREEN START---")
+    keyboardrunning = False
+
     window = tk.Tk()
     window.resizable(False, False)
     window.title('ADB屏幕快照')
@@ -153,6 +293,8 @@ def main():
     window.bind("<B1-Motion>", mouseslide)
     # 绑定双击>>双击
     window.bind("<Double-Button-1>", mouseslide)
+    # 绑定中键点击>>切换键盘输入
+    window.bind("<Button-2>", mouse2keyboard)
     window.mainloop()
     return
 
