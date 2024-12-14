@@ -220,6 +220,10 @@ def mouseslide(event):
 def mouse2keyboardrelease(event):
     global keyboardrunning
     global thread
+    # 用户主动退出线程
+    if False == keyboardrunning:
+        mouse2keyboard(event)
+        return
     window.bind('<Button-2>', donothing)
     keyboardrunning = False
     # 唤醒keyboard线程
