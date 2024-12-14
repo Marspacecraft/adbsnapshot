@@ -1,5 +1,3 @@
-# adbsnapshot
- adb快照  
 ## 功能
 PC窗口显示设备屏幕快照，将针对窗口的操操作转化为针对设别的操作  
 支持的操作  
@@ -18,4 +16,6 @@ PC窗口显示设备屏幕快照，将针对窗口的操操作转化为针对设
 - 只支持连接一个adb设备  
 - 启动前需要先建立adb连接
 - 执行的命令会显示在窗口的title
-- 执行命令和命令结果会显示在终端上
+- 执行命令和命令结果会显示在终端上  
+![](https://github.com/Marspacecraft/adbsnapshot/blob/main/pic.png)    
+
