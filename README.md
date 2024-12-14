@@ -9,7 +9,7 @@ PC窗口显示设备屏幕快照，将针对窗口的操作转化为针对设备
 通过adb截屏命令将截屏文件传到PC并显示在窗口，将针对窗口的操作映射到adb指令并发送给设别  
 ## 运行
 - 安装依赖包  
-`pip install pillow`  
+`pip install pillow keyboard pyautogui`  
 - 运行  
 在**adbsnapshot**目录下运行  
 `python adbsnapshot.py`   
