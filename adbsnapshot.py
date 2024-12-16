@@ -97,7 +97,7 @@ AdbKeyValue = {
 }
 
 PNGFILE='adbscreen.png'
-TITLESIZE=30
+TITLESIZE=40
 global window
 global winsize
 global resizetime
@@ -264,8 +264,8 @@ def winsizeinit():
     if i_x > (x / 2):
         i_x = (x / 2)
         i_y = i_x / prop
-    if i_y > (y / 2):
-        i_y = (y / 2)
+    if i_y > y:
+        i_y = y
         i_x = i_y * prop
     winsize = (int(i_x), int(i_y))
     x, y = adbimage.size
