@@ -30,6 +30,6 @@ PC窗口显示设备屏幕快照，将针对窗口的操作转化为针对设备
 ![](https://github.com/Marspacecraft/adbsnapshot/blob/main/pic.png)    
 
 ## DPT-RP1  
-- `adbsnapshot_dpt.py`脚本专门针对dpt-rp1设备  
+- `adbsnapshot_dpt.py`脚本专门针对dpt-rp1触控失效设备  
 - 先执行`python adbsnapshot_dpt.py`命令，如果点击无效，再使用`python adbsnapshot_dpt.py DPT`命令,该命令会发送event，模拟touch操作。短按命令无法生效，原因未知。点击由长按实现，部分场景可能无法实现短按。
 
