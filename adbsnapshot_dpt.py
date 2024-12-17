@@ -7,6 +7,7 @@ import threading
 import pyautogui
 from PIL import Image, ImageTk
 import tkinter as tk
+from tkinter import filedialog
 
 AdbKeyValue = {
 '2':'8',#1
@@ -330,14 +331,43 @@ def homecmd():
     execadbcmd("adb shell input keyevent 3")
 def backcmd():
     execadbcmd("adb shell input keyevent 4")
+def bluctoothcmd():
+    execadbcmd("adb shell am start -a android.settings.BLUETOOTH_SETTINGS")
+def wificmd():
+    execadbcmd("adb shell am start -a android.intent.action.MAIN -n com.android.settings/.wifi.WifiSettings")
+def languagecmd():
+    execadbcmd("adb shell am start -a android.settings.LOCALE_SETTINGS")
+def apkcmd():
+    f_path = filedialog.askopenfilename(title="选择安装包",filetypes=[("APK files","*.apk")])
+    execadbcmd("adb install -r "+f_path)
+def Settingcmd():
+    execadbcmd("adb shell am start  -n com.android.settings/com.android.settings.Settings")
+def poweroffcmd():
+    execadbcmd("adb shell setprop sys.powerctl shutdown")
+def rebootcmd():
+    execadbcmd("adb shell setprop sys.powerctl reboot")
 def buttoninit():
     global window
     global winsize
-    B = tk.Button(window, text="HOME", command=homecmd, bg="gray", fg="yellow")
-    C = tk.Button(window, text="BACK", command=backcmd, bg="gray", fg="yellow")
+    B = tk.Button(window, text="Home", command=homecmd, bg="gray", fg="yellow")
+    C = tk.Button(window, text="Back", command=backcmd, bg="gray", fg="yellow")
+    D = tk.Button(window, text="蓝牙", command=bluctoothcmd, bg="gray", fg="yellow")
+    E = tk.Button(window, text="wifi", command=wificmd, bg="gray", fg="yellow")
+    F = tk.Button(window, text="语言", command=languagecmd, bg="gray", fg="yellow")
+    G = tk.Button(window, text="软件", command=apkcmd, bg="gray", fg="yellow")
+    H = tk.Button(window, text="设置", command=Settingcmd, bg="gray", fg="yellow")
+    I = tk.Button(window, text="关机", command=poweroffcmd, bg="gray", fg="yellow")
+    J = tk.Button(window, text="重启", command=rebootcmd, bg="gray", fg="yellow")
 
-    B.grid(row=0,column=1)
-    C.grid(row=1,column=1)
+    B.grid(row=0,column=1,sticky="nsew")
+    C.grid(row=1,column=1,sticky="nsew")
+    D.grid(row=2, column=1,sticky="nsew")
+    E.grid(row=3, column=1,sticky="nsew")
+    F.grid(row=4, column=1,sticky="nsew")
+    G.grid(row=5, column=1,sticky="nsew")
+    H.grid(row=6, column=1,sticky="nsew")
+    I.grid(row=7, column=1, sticky="nsew")
+    J.grid(row=8, column=1, sticky="nsew")
 
 def main():
     global window
@@ -363,7 +393,7 @@ def main():
     image = adbimage.resize(winsize)
     photo = ImageTk.PhotoImage(image)
     label = tk.Label(window, image=photo)
-    label.grid(row=0, column=0,rowspan=2)
+    label.grid(row=0, column=0,rowspan=9)
 
     # 绑定鼠标左键单击事件>>点击并更新快照
     label.bind('<ButtonRelease-1>', mouseclick)
