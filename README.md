@@ -33,6 +33,6 @@ PC窗口显示设备屏幕快照，将针对窗口的操作转化为针对设备
 - `adbsnapshot_dpt.py`脚本专门针对dpt-rp1触控失效设备  
 - 先执行`python adbsnapshot_dpt.py`命令，如果点击无效，再使用下面指令  
 - `python adbsnapshot_dpt.py DPT`命令,该命令会发送event，模拟touch操作。  
-短touch无法识别，将`安卓设置>>无障碍>>触摸和按住延迟`改为`长`，即可实现单击操作
+短touch被识别成长按，将`安卓设置`>>`无障碍`>>`触摸和按住延迟`改为`长`，即可实现单击操作
 ![](https://github.com/Marspacecraft/adbsnapshot/blob/main/pic2.png)
 
